@@ -4,8 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tiktok_clone/constants.dart';
 import 'confirm_screen.dart';
 
-class AddVideoSCreen extends StatelessWidget {
-  const AddVideoSCreen({Key? key}) : super(key: key);
+class AddVideoScreen extends StatelessWidget {
+  const AddVideoScreen({Key? key}) : super(key: key);
 
   pickVideo(ImageSource src, BuildContext context) async {
     final video = await ImagePicker().pickVideo(source: src);
@@ -83,12 +83,12 @@ class AddVideoSCreen extends StatelessWidget {
       body: Center(
           child: InkWell(
         onTap: () => showOptionsDialog(context),
-        child: Container(
-          width: 190,
-          height: 50,
+            child: Container(
+              width: 190,
+              height: 50,
           decoration: BoxDecoration(color: buttonColor),
-          child: const Center(
-            child: Text(
+            child: const Center(
+             child: Text(
               'Add Video',
               style: TextStyle(
                   fontSize: 20,
