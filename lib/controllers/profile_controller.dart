@@ -15,13 +15,49 @@ class ProfileController extends GetxController {
 
   getUserData() async {
     List<String> thumbnails = [];
-    QuerySnapshot myVideos = await firestore
+    var myVideos = await firestore
         .collection('videos')
         .where('uid', isEqualTo: _uid.value)
         .get();
 
     for(int i=0 ; i<myVideos.docs.length; i ++){
+      thumbnails.add((myVideos.docs[i].data() as dynamic)[thumbnails]);
 
     }
+    DocumentSnapshot userDoc = await firestore.collection('users').doc(_uid.value).get();
+    final userData = userDoc.data()! as dynamic;
+    String name = userData ['name'];
+    String profilePhoto = userData ['profilePhoto'];
+    int likes = 0;
+    int followers = 0;
+    int following = 0;
+    bool isFollowing = false;
+
+    for (var item in myVideos.docs) {
+      likes+=(item.data() ['likes'] as List).length;
+    }
+    var followerDoc = await firestore.collection('users').doc(_uid.value).collection('followers').get();
+    var followingDoc = await firestore.collection('users').doc(_uid.value).collection('following').get();
+    followers = followerDoc.docs.length;
+    following = followingDoc.docs.length;
+
+    firestore.collection('users').doc(_uid.value).collection('followers').doc(authController.user.uid).get().then((value)  {
+      if (value.exists){
+        isFollowing = true;
+      }else{
+        isFollowing = false;
+      }
+    });
+
+    _user.value = {
+      'followers': followers.toString(),
+      'following' : following.toString(),
+      'isFollowing' : isFollowing,
+      'likes': likes.toString(),
+      'profilePhoto' : profilePhoto,
+      'name' : name,
+      'thumbnails' : thumbnails,
+    };
+    update();
   }
 }
